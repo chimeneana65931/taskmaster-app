@@ -1,0 +1,279 @@
+:host { // Style appliqué à l'hôte du composant (la balise app-todo-list elle-même)
+  --bg: #f3f4f8; // Couleur de fond générale (mode clair)
+  --card-bg: #ffffff; // Couleur de fond des cartes (mode clair)
+  --text: #1f2333; // Couleur du texte principal (mode clair)
+  --muted: #7b7f95; // Couleur du texte secondaire/atténué
+  --border: #eceef4; // Couleur des bordures et séparateurs
+  --primary: #6c63ff; // Couleur principale (violet) de l'interface
+  --primary-light: #a89bff; // Variante plus claire de la couleur principale
+  --orange: #f5a623; // Couleur utilisée pour les tâches restantes
+  --green: #17b26a; // Couleur utilisée pour la progression
+  display: block; // Force l'affichage en bloc du composant
+  min-height: 100vh; // Occupe au minimum toute la hauteur de l'écran
+  background: var(--bg); // Applique la couleur de fond générale
+  padding: 24px; // Espacement intérieur autour du contenu
+  font-family: 'Segoe UI', sans-serif; // Police de caractères utilisée
+}
+
+.app-shell.dark { // Style appliqué quand le mode sombre est actif
+  --bg: #14151f; // Couleur de fond générale (mode sombre)
+  --card-bg: #1d1f2b; // Couleur de fond des cartes (mode sombre)
+  --text: #f0f0f5; // Couleur du texte principal (mode sombre)
+  --muted: #9497ad; // Couleur du texte atténué (mode sombre)
+  --border: #2a2c3a; // Couleur des bordures (mode sombre)
+}
+
+.card { // Style commun à toutes les cartes de l'interface
+  background: var(--card-bg); // Couleur de fond de la carte
+  border-radius: 14px; // Coins arrondis de la carte
+  padding: 20px; // Espacement intérieur de la carte
+  margin-bottom: 16px; // Espace en dessous de chaque carte
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04); // Légère ombre portée
+}
+
+.header-card { // Style spécifique à la carte d'en-tête
+  display: flex; // Affichage en ligne flexible
+  justify-content: space-between; // Espace le logo et le bouton aux extrémités
+  align-items: center; // Centre verticalement les éléments
+
+  .brand { // Bloc regroupant logo et titre, imbriqué dans header-card
+    display: flex; // Affichage en ligne flexible
+    align-items: center; // Centre verticalement logo et texte
+    gap: 12px; // Espace entre le logo et le texte
+
+    .logo { // Style du logo, imbriqué dans .brand
+      width: 40px; // Largeur fixe du logo
+      height: 40px; // Hauteur fixe du logo
+      border-radius: 10px; // Coins arrondis du logo
+      background: linear-gradient(135deg, var(--primary), var(--primary-light)); // Dégradé de couleur
+      color: white; // Couleur du symbole à l'intérieur
+      display: flex; // Affichage flexible pour centrer le contenu
+      align-items: center; // Centre verticalement le symbole
+      justify-content: center; // Centre horizontalement le symbole
+      font-weight: bold; // Texte en gras
+    }
+
+    h1 { margin: 0; color: var(--text); font-size: 18px; } // Style du titre principal, sans marge
+    .subtitle { margin: 0; color: var(--muted); font-size: 12px; } // Style du sous-titre, texte atténué
+  }
+
+  .icon-btn { // Style du bouton mode sombre, imbriqué dans header-card
+    border: none; // Pas de bordure
+    background: var(--bg); // Fond assorti à la page
+    border-radius: 10px; // Coins arrondis
+    width: 36px; // Largeur fixe du bouton
+    height: 36px; // Hauteur fixe du bouton
+    cursor: pointer; // Curseur en forme de main au survol
+  }
+}
+
+.stats-row { // Style de la ligne des trois cartes de statistiques
+  display: grid; // Utilise une grille CSS
+  grid-template-columns: repeat(3, 1fr); // Trois colonnes de largeur égale
+  gap: 16px; // Espace entre les cartes
+
+  .stat-card { // Style commun aux cartes de statistiques, imbriqué
+    .stat-label { color: var(--muted); font-size: 12px; text-transform: uppercase; } // Libellé en majuscules atténué
+    .stat-line { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; } // Ligne valeur/icône
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--text); } // Style de la valeur numérique
+    .stat-value.orange { color: var(--orange); } // Variante orange pour "restantes"
+    .stat-value.green { color: var(--green); } // Variante verte pour "progression"
+    .stat-icon { font-size: 18px; } // Taille de l'icône décorative
+
+    .progress-bar { // Barre de progression, imbriquée dans stat-card
+      height: 6px; // Hauteur fine de la barre
+      border-radius: 4px; // Coins légèrement arrondis
+      background: var(--border); // Fond de la barre vide
+      margin-top: 10px; // Espace au-dessus de la barre
+      overflow: hidden; // Cache le dépassement du remplissage
+
+      .progress-fill { // Remplissage de la barre, imbriqué
+        height: 100%; // Occupe toute la hauteur de la barre
+        background: linear-gradient(90deg, var(--primary), var(--green)); // Dégradé de couleur du remplissage
+        transition: width 0.3s ease; // Animation fluide lors du changement de largeur
+      }
+    }
+  }
+}
+
+.add-card { // Style de la carte d'ajout de tâche
+  h2 { margin: 0 0 12px; font-size: 15px; color: var(--text); } // Style du titre du formulaire
+
+  .add-row { // Ligne regroupant les champs du formulaire, imbriquée
+    display: flex; // Affichage en ligne flexible
+    gap: 10px; // Espace entre les champs
+
+    .add-input { // Champ de saisie du titre, imbriqué
+      flex: 1; // Prend tout l'espace disponible
+      padding: 10px 14px; // Espacement intérieur
+      border-radius: 10px; // Coins arrondis
+      border: 1px solid var(--border); // Bordure fine
+      background: var(--bg); // Fond assorti à la page
+      color: var(--text); // Couleur du texte saisi
+    }
+
+    select { // Style des menus déroulants, imbriqué dans add-row
+      padding: 10px 12px; // Espacement intérieur
+      border-radius: 10px; // Coins arrondis
+      border: 1px solid var(--border); // Bordure fine
+      background: var(--bg); // Fond assorti à la page
+      color: var(--text); // Couleur du texte
+    }
+
+    .add-btn { // Bouton d'ajout, imbriqué dans add-row
+      background: var(--primary); // Fond de couleur principale
+      color: white; // Texte blanc
+      border: none; // Pas de bordure
+      border-radius: 10px; // Coins arrondis
+      padding: 10px 18px; // Espacement intérieur
+      font-weight: 600; // Texte semi-gras
+      cursor: pointer; // Curseur en forme de main au survol
+
+      &:hover { background: #5a52e0; } // Couleur plus foncée au survol
+    }
+  }
+}
+
+.list-card { // Style de la carte contenant la liste des tâches
+  .search-row { // Ligne recherche + onglets de statut, imbriquée
+    display: flex; // Affichage en ligne flexible
+    justify-content: space-between; // Espace les deux blocs aux extrémités
+    gap: 12px; // Espace entre les blocs
+    margin-bottom: 14px; // Espace en dessous de la ligne
+
+    .search-input { // Champ de recherche, imbriqué dans search-row
+      flex: 1; // Prend tout l'espace disponible
+      padding: 10px 14px; // Espacement intérieur
+      border-radius: 10px; // Coins arrondis
+      border: 1px solid var(--border); // Bordure fine
+      background: var(--bg); // Fond assorti à la page
+      color: var(--text); // Couleur du texte saisi
+    }
+
+    .status-tabs { // Groupe des onglets de statut, imbriqué
+      display: flex; // Affichage en ligne flexible
+      gap: 4px; // Petit espace entre les onglets
+      background: var(--bg); // Fond du groupe d'onglets
+      border-radius: 10px; // Coins arrondis du groupe
+      padding: 4px; // Espacement intérieur du groupe
+
+      button { // Style de chaque onglet, imbriqué dans status-tabs
+        border: none; // Pas de bordure
+        background: transparent; // Fond transparent par défaut
+        padding: 6px 12px; // Espacement intérieur
+        border-radius: 8px; // Coins arrondis
+        cursor: pointer; // Curseur en forme de main au survol
+        font-size: 13px; // Taille du texte
+        color: var(--muted); // Couleur atténuée par défaut
+
+        &.active { background: var(--card-bg); color: var(--text); font-weight: 600; } // Style de l'onglet actif
+      }
+    }
+  }
+
+  .filter-row { // Ligne des filtres de catégorie et du tri, imbriquée
+    display: flex; // Affichage en ligne flexible
+    align-items: center; // Centre verticalement les éléments
+    gap: 8px; // Espace entre les éléments
+    flex-wrap: wrap; // Permet le retour à la ligne si manque de place
+    margin-bottom: 16px; // Espace en dessous de la ligne
+    font-size: 13px; // Taille du texte
+    color: var(--muted); // Couleur atténuée du texte
+
+    button { // Style des boutons de catégorie, imbriqué dans filter-row
+      border: none; // Pas de bordure
+      background: var(--bg); // Fond assorti à la page
+      padding: 6px 12px; // Espacement intérieur
+      border-radius: 20px; // Coins très arrondis (effet pilule)
+      cursor: pointer; // Curseur en forme de main au survol
+      color: var(--text); // Couleur du texte
+
+      &.active { background: var(--primary); color: white; } // Style du bouton de catégorie actif
+    }
+
+    .sort-label { margin-left: auto; } // Pousse le libellé "Trier par" vers la droite
+
+    select { // Style du menu déroulant de tri, imbriqué dans filter-row
+      padding: 6px 10px; // Espacement intérieur
+      border-radius: 8px; // Coins arrondis
+      border: 1px solid var(--border); // Bordure fine
+      background: var(--bg); // Fond assorti à la page
+      color: var(--text); // Couleur du texte
+    }
+  }
+
+  .todo-items { // Style de la liste des tâches, imbriqué dans list-card
+    list-style: none; // Supprime les puces de liste
+    padding: 0; // Supprime l'espacement intérieur par défaut
+    margin: 0; // Supprime la marge par défaut
+
+    li { // Style de chaque élément de tâche, imbriqué dans todo-items
+      display: flex; // Affichage en ligne flexible
+      align-items: center; // Centre verticalement les éléments
+      gap: 12px; // Espace entre checkbox, texte et bouton
+      padding: 12px 4px; // Espacement intérieur
+      border-bottom: 1px solid var(--border); // Ligne de séparation en bas
+
+      &.completed .todo-title { text-decoration: line-through; color: var(--muted); } // Style du titre si terminé
+
+      .todo-main { // Bloc contenant titre, catégorie et priorité, imbriqué
+        flex: 1; // Prend tout l'espace disponible
+        display: flex; // Affichage en ligne flexible
+        align-items: center; // Centre verticalement les éléments
+        gap: 10px; // Espace entre les éléments
+      }
+
+      .todo-title { color: var(--text); cursor: pointer; } // Style du titre de la tâche
+
+      .badge { // Style commun des badges catégorie/priorité, imbriqué
+        font-size: 11px; // Petite taille de texte
+        padding: 3px 10px; // Espacement intérieur
+        border-radius: 12px; // Coins très arrondis
+        background: var(--bg); // Fond assorti à la page
+        color: var(--muted); // Couleur atténuée par défaut
+      }
+
+      .badge.priority.haute { background: #fde2e2; color: #d64545; } // Style du badge priorité haute (rouge)
+      .badge.priority.moyenne { background: #fff3d6; color: #b8860b; } // Style du badge priorité moyenne (jaune)
+      .badge.priority.basse { background: #e1f5ea; color: #1e8a52; } // Style du badge priorité basse (vert)
+
+      .edit-input { // Style du champ d'édition inline, imbriqué
+        flex: 1; // Prend tout l'espace disponible
+        padding: 6px 10px; // Espacement intérieur
+        border-radius: 8px; // Coins arrondis
+        border: 1px solid var(--primary); // Bordure de couleur principale
+      }
+
+      .delete-btn { // Style du bouton de suppression, imbriqué
+        border: none; // Pas de bordure
+        background: transparent; // Fond transparent
+        color: #e74c3c; // Couleur rouge
+        cursor: pointer; // Curseur en forme de main au survol
+        font-size: 16px; // Taille de l'icône ✕
+      }
+    }
+
+    .empty-state { // Style du message "aucune tâche", imbriqué dans todo-items
+      justify-content: center; // Centre le contenu horizontalement
+      color: var(--muted); // Couleur atténuée
+      padding: 30px 0; // Espacement vertical généreux
+    }
+  }
+
+  .footer { // Style du pied de page de la liste, imbriqué dans list-card
+    display: flex; // Affichage en ligne flexible
+    justify-content: space-between; // Espace les éléments aux extrémités
+    align-items: center; // Centre verticalement les éléments
+    margin-top: 12px; // Espace au-dessus du pied de page
+    font-size: 13px; // Taille du texte
+    color: var(--muted); // Couleur atténuée
+
+    button { // Style du bouton "Effacer les terminées", imbriqué
+      border: none; // Pas de bordure
+      background: transparent; // Fond transparent
+      color: var(--primary); // Couleur principale du texte
+      cursor: pointer; // Curseur en forme de main au survol
+      text-decoration: underline; // Texte souligné
+    }
+  }
+}

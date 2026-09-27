@@ -1,0 +1,183 @@
+<!-- Conteneur principal de toute l'application, applique le mode sombre si actif -->
+<div class="app-shell" [class.dark]="darkMode()">
+
+  <!-- Carte d'en-tête contenant le logo et le titre -->
+  <div class="card header-card">
+    <!-- Bloc regroupant le logo et le nom de l'application -->
+    <div class="brand">
+      <!-- Icône/logo de l'application -->
+      <div class="logo">✓</div>
+      <!-- Bloc texte contenant le titre et le sous-titre -->
+      <div>
+        <!-- Titre principal de l'application -->
+        <h1>Todo-list</h1>
+        <!-- Sous-titre décrivant la technologie utilisée -->
+        <p class="subtitle">Angular &amp; LocalStorage</p>
+      </div>
+    </div>
+    <!-- Bouton pour activer/désactiver le mode sombre -->
+    <button class="icon-btn" (click)="toggleDarkMode()">🌙</button>
+  </div>
+
+  <!-- Ligne contenant les trois cartes de statistiques -->
+  <div class="stats-row">
+    <!-- Carte affichant le nombre total de tâches -->
+    <div class="card stat-card">
+      <!-- Libellé de la statistique -->
+      <span class="stat-label">Total des tâches</span>
+      <!-- Ligne contenant la valeur et l'icône -->
+      <div class="stat-line">
+        <!-- Valeur numérique du total des tâches -->
+        <span class="stat-value">{{ totalCount() }}</span>
+        <!-- Icône décorative -->
+        <span class="stat-icon">📋</span>
+      </div>
+    </div>
+    <!-- Carte affichant le nombre de tâches restantes -->
+    <div class="card stat-card">
+      <!-- Libellé de la statistique -->
+      <span class="stat-label">Restantes</span>
+      <!-- Ligne contenant la valeur et l'icône -->
+      <div class="stat-line">
+        <!-- Valeur numérique des tâches restantes, en orange -->
+        <span class="stat-value orange">{{ remainingCount() }}</span>
+        <!-- Icône décorative -->
+        <span class="stat-icon">⏳</span>
+      </div>
+    </div>
+    <!-- Carte affichant le pourcentage de progression -->
+    <div class="card stat-card">
+      <!-- Libellé de la statistique -->
+      <span class="stat-label">Progression</span>
+      <!-- Ligne contenant la valeur du pourcentage -->
+      <div class="stat-line">
+        <!-- Valeur du pourcentage de progression, en vert -->
+        <span class="stat-value green">{{ progressPercent() }}%</span>
+      </div>
+      <!-- Barre de progression -->
+      <div class="progress-bar">
+        <!-- Remplissage de la barre proportionnel au pourcentage -->
+        <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte contenant le formulaire d'ajout de tâche -->
+  <div class="card add-card">
+    <!-- Titre du formulaire -->
+    <h2>✨ Ajouter une nouvelle tâche</h2>
+    <!-- Ligne regroupant les champs du formulaire -->
+    <div class="add-row">
+      <!-- Champ de saisie du titre de la tâche -->
+      <input
+        type="text"
+        placeholder="Qu'avez-vous à accomplir aujourd'hui ?"
+        [(ngModel)]="newTitle"
+        (keyup.enter)="onAdd()"
+        class="add-input"
+      />
+      <!-- Menu déroulant pour choisir la catégorie -->
+      <select [(ngModel)]="newCategory">
+        <!-- Génère une option par catégorie disponible -->
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+      <!-- Menu déroulant pour choisir la priorité -->
+      <select [(ngModel)]="newPriority">
+        <!-- Génère une option par priorité disponible -->
+        <option *ngFor="let p of priorities" [value]="p">Priorité : {{ p }}</option>
+      </select>
+      <!-- Bouton pour valider l'ajout de la tâche -->
+      <button class="add-btn" (click)="onAdd()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- Carte contenant la liste des tâches et ses contrôles -->
+  <div class="card list-card">
+    <!-- Ligne contenant la recherche et les onglets de statut -->
+    <div class="search-row">
+      <!-- Champ de recherche textuelle -->
+      <input
+        type="text"
+        placeholder="🔎 Rechercher une tâche..."
+        [ngModel]="searchText()"
+        (ngModelChange)="onSearchChange($event)"
+        class="search-input"
+      />
+      <!-- Groupe de boutons pour filtrer par statut -->
+      <div class="status-tabs">
+        <!-- Bouton pour afficher toutes les tâches -->
+        <button [class.active]="statusFilter()==='all'" (click)="setStatusFilter('all')">Toutes</button>
+        <!-- Bouton pour afficher seulement les tâches à faire -->
+        <button [class.active]="statusFilter()==='active'" (click)="setStatusFilter('active')">À faire ({{ activeCount() }})</button>
+        <!-- Bouton pour afficher seulement les tâches terminées -->
+        <button [class.active]="statusFilter()==='completed'" (click)="setStatusFilter('completed')">Terminées</button>
+      </div>
+    </div>
+
+    <!-- Ligne contenant les filtres de catégorie et le tri -->
+    <div class="filter-row">
+      <!-- Libellé "Catégorie :" -->
+      <span>Catégorie :</span>
+      <!-- Bouton pour afficher toutes les catégories -->
+      <button [class.active]="categoryFilter()==='Toutes'" (click)="setCategoryFilter('Toutes')">Toutes</button>
+      <!-- Génère un bouton par catégorie disponible -->
+      <button *ngFor="let c of categories" [class.active]="categoryFilter()===c" (click)="setCategoryFilter(c)">{{ c }}</button>
+
+      <!-- Libellé "Trier par :" poussé à droite -->
+      <span class="sort-label">Trier par :</span>
+      <!-- Menu déroulant pour choisir l'ordre de tri -->
+      <select [ngModel]="sortBy()" (ngModelChange)="onSortChange($event)">
+        <!-- Option de tri : plus récentes en premier -->
+        <option value="recent">Plus récentes</option>
+        <!-- Option de tri : plus anciennes en premier -->
+        <option value="old">Plus anciennes</option>
+        <!-- Option de tri : par priorité -->
+        <option value="priority">Priorité</option>
+        <!-- Option de tri : par ordre alphabétique -->
+        <option value="alpha">Alphabétique</option>
+      </select>
+    </div>
+
+    <!-- Liste des tâches affichées -->
+    <ul class="todo-items">
+      <!-- Génère un élément de liste pour chaque tâche filtrée -->
+      <li *ngFor="let todo of filteredTodos()" [class.completed]="todo.completed">
+        <!-- Case à cocher pour marquer la tâche comme terminée -->
+        <input type="checkbox" [checked]="todo.completed" (change)="onToggle(todo.id)" />
+
+        <!-- Bloc affiché normalement (hors édition) -->
+        <div class="todo-main" *ngIf="editingId !== todo.id">
+          <!-- Titre de la tâche, double-clic pour éditer -->
+          <span class="todo-title" (dblclick)="startEdit(todo.id, todo.title)">{{ todo.title }}</span>
+          <!-- Badge affichant la catégorie de la tâche -->
+          <span class="badge category">{{ todo.category }}</span>
+          <!-- Badge affichant la priorité de la tâche -->
+          <span class="badge priority" [class]="todo.priority.toLowerCase()">{{ todo.priority }}</span>
+        </div>
+
+        <!-- Champ de saisie affiché uniquement en mode édition -->
+        <input
+          *ngIf="editingId === todo.id"
+          type="text"
+          [(ngModel)]="editingTitle"
+          (keyup.enter)="saveEdit(todo.id)"
+          (blur)="saveEdit(todo.id)"
+          class="edit-input"
+        />
+
+        <!-- Bouton pour supprimer la tâche -->
+        <button class="delete-btn" (click)="onDelete(todo.id)">✕</button>
+      </li>
+      <!-- Message affiché si aucune tâche ne correspond aux filtres -->
+      <li *ngIf="filteredTodos().length === 0" class="empty-state">Aucune tâche à afficher</li>
+    </ul>
+
+    <!-- Pied de page affiché seulement s'il y a au moins une tâche -->
+    <div class="footer" *ngIf="totalCount() > 0">
+      <!-- Affiche le nombre de tâches restantes -->
+      <span>{{ remainingCount() }} tâche(s) restante(s)</span>
+      <!-- Bouton pour supprimer toutes les tâches terminées -->
+      <button (click)="clearCompleted()">Effacer les terminées</button>
+    </div>
+  </div>
+</div>
